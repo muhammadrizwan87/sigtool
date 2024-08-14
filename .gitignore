@@ -1,0 +1,74 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pyenv
+.python-version
+
+# pytest
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype
+.pytype/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Env files
+.env
+.env.*
+
+# Others
+*.bak
+*.swp
+*~
+*.log
+*.sqlite
+node_modules/
