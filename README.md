@@ -35,8 +35,12 @@ You can easily install SigTool using pip:
 ```bash
 pip install sigtool
 ```
-
 This command will automatically handle the installation of SigTool.
+
+If you want to get the latest changes and features, you can install SigTool directly from the GitHub repository:
+```bash
+pip install -U git+https://github.com/muhammadrizwan87/sigtool.git
+```
 
 ### **2. Custom Build Installation:**
 

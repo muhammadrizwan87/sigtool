@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sigtool"
+version = "1.0"
+description = "A tool for analyzing signatures of APK files"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "MuhammadRizwan", email = "mrizwan87@protonmail.com"},
+]
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/muhammadrizwan87/sigtool"
+
+[project.scripts]
+sigtool = "sigtool.main:main"
