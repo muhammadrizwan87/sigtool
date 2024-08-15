@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import json
 import sys
 import os
 import re
@@ -15,6 +16,7 @@ from .smali_bytearray_generator import SmaliByteArrayGenerator
 from .base64_encoder import Base64Encoder
 from .pem_certificate_generator import PEMCertificateGenerator
 from .colon_uppercase import ColonUpperCase
+from .colon_lowercase import ColonLowerCase
 from .output_formatter import OutputFormatter
 
 class SigTool:
@@ -24,6 +26,7 @@ class SigTool:
         self.extractor = APKInfoExtractor(apk_path)
         self.formatter = OutputFormatter()
         self.colon_upper = ColonUpperCase()
+        self.colon_lower = ColonLowerCase()
         self.signature_hex = None
         self.hashes = None
 
@@ -88,9 +91,15 @@ class SigTool:
             if not os.path.isabs(output_path):
                 output_path = os.path.abspath(output_path)
             
-            with open(output_path, 'w') as file:
-                file.write(content)
-            
+            if output_path.endswith('.json'):
+                if isinstance(content, dict):
+                    content = {key: value.replace('\\n', '\n') if isinstance(value, str) else value for key, value in content.items()}
+                    with open(output_path, 'w') as file:
+                        json.dump(content, file, indent=4)
+            else:
+                with open(output_path, 'w') as file:
+                    file.write(content)
+
             success_message = f"Output saved to {output_path}"
             print('\n', self.formatter.format_with_style(success_message, 'key'))
         
@@ -135,7 +144,12 @@ class SigTool:
             crc32_hashcode = self.colon_upper.process_crc32_and_hashcode(crc32_hashcode)
 
         if '-c' in self.args:
-            hashes = self.colon_upper.process_signature_hashes(hashes)
+            if '-e' in self.args or '-f' in self.args:
+                return print(self.formatter.format_error("ERROR: Cannot use -c with -f or -e."))
+            if '-u' in self.args:
+                hashes = self.colon_upper.process_signature_hashes(hashes)
+            else:
+                hashes = self.colon_lower.process_signature_hashes(hashes)
 
         if '-e' in self.args:
             encoded_signature, encoded_hashes = self.encode_base64(hashes)
@@ -145,7 +159,7 @@ class SigTool:
             output += self.formatter.format_result_two("Certificate", encoded_signature)
             output += self.formatter.format_result_two("\nsignatures (Add '\\n' per 76 characters)", f"{formatted_encoded_signature}".lstrip("\n"))
 
-        elif '-p' in self.args:
+        if '-p' in self.args:
             pem_certificate = self.generate_pem_certificate()
             output += self.formatter.format_header("PEM Certificate Details\n")
             output += self.formatter.format_divider()
@@ -191,6 +205,49 @@ class SigTool:
             else:
                 print(self.formatter.format_error("Error: '-o' requires a valid output path."))
                 sys.exit(1)
+            if output_path.endswith('.json'):
+                if not '-f' in self.args:
+                    output_dict = {
+                    'APK Information': apk_info,
+                    'Calculated Hashes': hashes,
+                    'CRC32 and hashCode Results': crc32_hashcode,
+                    'Certificate Bytes': self.signature_hex,
+                    }
+                    if '-e' in self.args:
+                        output_dict['Base64 Encoded Hashes'] = encoded_hashes
+                        output_dict['Base64 Encoded Certificate'] = encoded_signature
+                        output_dict['signatures (Add \'\\n\' per 76 characters)'] = formatted_encoded_signature
+                    if '-p' in self.args:
+                        pem_cert_lines = pem_certificate.strip().split('\n')
+
+                        pem_cert_dict = {"Certificate": {"Data": {}}}
+
+                        for line in pem_cert_lines:
+                            if ': ' in line:
+                                key, value = line.split(': ', 1)
+                                pem_cert_dict["Certificate"]["Data"][key.strip()] = value.strip()
+                        output_dict["PEM Certificate Details"] = pem_cert_dict
+                    if '-a' in self.args:
+                        output_dict['Byte Array Smali Format'] = smali_representation
+                else:
+                    output_dict = {
+                    'APK Information': apk_info,
+                    'Calculated Hashes': hashes,
+                    'CRC32 and hashCode Results': crc32_hashcode,
+                    'Certificate Bytes': self.signature_hex,
+                    'Base64 Encoded Hashes': encoded_hashes,
+                    'Base64 Encoded Certificate': encoded_signature,
+                    'signatures (Add \'\\n\' per 76 characters)': formatted_encoded_signature,
+                    'Byte Array Smali Format': smali_representation,
+                    }
+                    pem_cert_lines = pem_certificate.strip().split('\n')
+                    pem_cert_dict = {"Certificate": {"Data": {}}}
+                    for line in pem_cert_lines:
+                        if ': ' in line:
+                            key, value = line.split(': ', 1)
+                            pem_cert_dict["Certificate"]["Data"][key.strip()] = value.strip()
+                    output_dict["PEM Certificate Details"] = pem_cert_dict
+                return self.save_to_file(output_dict, output_path)
             self.save_to_file(output, output_path)
         else:
             output = logo_one + output
@@ -234,9 +291,9 @@ Examples:
     parser.add_argument('-o', type=str, help="Output results to a specified file path")
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {version}', help="Show program's version number and exit")
 
-    args = parser.parse_args()
+    args, unknown_args = parser.parse_known_args()
 
-    if len(sys.argv) < 2 or len(sys.argv) > 5:
+    if len(sys.argv) < 2 or len(sys.argv) > 7:
         parser.print_help()
         sys.exit(1)
 
@@ -246,18 +303,9 @@ Examples:
 
     valid_args = {'-u', '-c', '-e', '-p', '-a', '-f', '-o'}
 
-    if len(sys.argv) > 2 and sys.argv[2] not in valid_args:
+    if len(unknown_args) > 0 and unknown_args[0] not in valid_args:
         parser.print_help()
         sys.exit(1)
-
-    if len(sys.argv) > 3:
-        if sys.argv[3] == '-o' and len(sys.argv) == 5:
-            output_path = sys.argv[4]
-        elif sys.argv[3] == '-o':
-            parser.print_help()
-            sys.exit(1)
-        else:
-            output_path = sys.argv[3]
 
     sig_tool = SigTool(args.apk_path, sys.argv[1:])
     sig_tool.run()

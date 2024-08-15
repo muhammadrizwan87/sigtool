@@ -6,6 +6,7 @@ from .smali_bytearray_generator import SmaliByteArrayGenerator
 from .base64_encoder import Base64Encoder
 from .pem_certificate_generator import PEMCertificateGenerator
 from .colon_uppercase import ColonUpperCase
+from .colon_lowercase import ColonLowerCase
 from .output_formatter import OutputFormatter
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     "Base64Encoder",
     "PEMCertificateGenerator",
     "ColonUpperCase",
+    "ColonLowerCase",
     "OutputFormatter"
 ]
