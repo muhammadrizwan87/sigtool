@@ -58,16 +58,17 @@ If you prefer to build SigTool from the source:
    cd sigtool
    ```
 
-3. **Install setuptools:**
+3. **Install build:**
 
    ```bash
-   pip install setuptools
+   pip install build
    ```
 
 4. **Build and Install the Package:**
 
    ```bash
-   python setup.py install
+   python -m build
+   pip install --force-reinstall dist/sigtool-1.0-py3-none-any.whl
    ```
 
 ---
