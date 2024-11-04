@@ -7,6 +7,7 @@ from .base64_encoder import Base64Encoder
 from .pem_certificate_generator import PEMCertificateGenerator
 from .colon_uppercase import ColonUpperCase
 from .output_formatter import OutputFormatter
+from .pem_signature_extractor import PEMSignatureExtractor
 
 __all__ = [
     "APKInfoExtractor",
@@ -17,5 +18,6 @@ __all__ = [
     "Base64Encoder",
     "PEMCertificateGenerator",
     "ColonUpperCase",
-    "OutputFormatter"
+    "OutputFormatter",
+    "PEMSignatureExtractor"
 ]

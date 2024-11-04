@@ -18,22 +18,32 @@ class OutputFormatter:
 |                                 |
 |  ____  _      _____           _ |
 | / ___|(_) __ |_   _|__   ___ | ||
-| \___ \| |/ _` || |/ _ \ / _ \| ||
+| \\___ \\| |/ _` || |/ _ \\ / _ \\| ||
 |  ___) | | (_| || | (_) | (_) | ||
-| |____/|_|\__, ||_|\___/ \___/|_||
+| |____/|_|\\__, ||_|\\___/ \\___/|_||
 |          |___/                  |
-|                           v1.0  |
+|                           v2.0  |
 +---by MuhammadRizwan-------------+
         
         """
         self.logo_two = """+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- SigTool v1.0 by MuhammadRizwan    
+ SigTool v2.0 by MuhammadRizwan    
                                          
         https://TDOhex.t.me            
      https://Android_Patches.t.me      
 https://github.com/MuhammadRizwan87
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 """
+
+        self.meta_data = {
+            "Name": "SigTool",
+            "Version": "v2.0",
+            "Author": "MuhammadRizwan",
+            "GitHub Repository": "https://github.com/muhammadrizwan87/sigtool",
+            "Telegram Channel": "https://TDOhex.t.me",
+            "Second Channel": "https://Android_Patches.t.me",
+            "Discussion Group": "https://TDOhex_Discussion.t.me"
+        }
     
     def format_with_style(self, text: str, style: str) -> str:
         return f"{self.styles.get(style, '')}{text}{self.styles['endc']}"
@@ -56,6 +66,11 @@ https://github.com/MuhammadRizwan87
     def display_logo_two(self) -> str:
         return self.logo_two
 
+    def get_meta_data(self) -> str:
+        meta_lines = [f"{self.format_key(k)}: {self.format_value(v)}" for k, v in self.meta_data.items()]
+        meta_content = "\n".join(meta_lines)
+        return f"{self.display_logo_two()}\n{self.format_divider()}\n{meta_content}\n{self.format_divider()}"
+    
     def format_result(self, key: str, value: str) -> str:
         return f"{self.format_key(key)}: {self.format_value(value)}"
         

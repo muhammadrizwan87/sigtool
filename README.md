@@ -1,98 +1,110 @@
-# SigTool: APK Signature Analyzer Pro
+# SigTool: APK Signature and Keystore Analyzer Pro
 
 ---
 
 ## Overview
-**SigTool** is a command-line tool designed to analyze APK signatures and related information. It provides various functionalities such as extracting APK metadata, signature hashes, CRC32 and HashCode values, generating Base64 and PEM encoded certificates, and more.
+**SigTool** is a command-line tool designed to in-depth APK signature and keystore analysis and related information. It provides various functionalities such as extracting APK metadata, signature hashes, CRC32 and HashCode values, generating Base64 and PEM encoded certificates, and more.
 
 ---
 
 ## Features
 - **APK Information Extraction**: Extract essential details like app name, package name, version name, and build code from an APK file.
 
-- **Signature Extraction**: Retrieve the APK certificate bytes in hex string format.
+- **Signature Extraction**: Retrieve the certificate bytes in hex string format from APK file, RSA file and x509 certificate.
 
-- **Hash Calculations**: Generates and displays a wide range of cryptographic hash values such as SHA-1, SHA-224, SHA-256, SHA-356, SHA-512, MD5 from the APK signature.
+    - To extract an x509 certificate from your keystore, you can check out our second tool, **[KeySigner](https://github.com/muhammadrizwan87/keysigner)**.
 
-- **CRC32 and HashCode Calculation**: Compute CRC32 and Java-style HashCode from the APK signature.
+- **Hash Calculations**: Generates and displays a wide range of cryptographic hash values such as SHA-1, SHA-224, SHA-256, SHA-356, SHA-512, MD5 from the extracted certificate.
 
-- **Smali Bytecode Generation**: Convert the APK signature into a smali byte array format.
+- **CRC32 and HashCode Calculation**: Compute CRC32 and Java-style HashCode from the extracted certificate.
+
+- **Smali Bytecode Generation**: Convert the extracted certificate into a smali byte array format.
 
 - **Base64 Encoding**: Encode signatures and hashes in Base64.
 
-- **PEM Certificate Parsing**: Create and display PEM formatted certificates from the APK signature.
+- **PEM Certificate Parsing**: Create and display PEM formatted certificates from the extracted certificate.
 
 - **Colon and Uppercase Formatting**: Format hashes with colons and convert to uppercase.
 
-- **File Handling Capabilities:** Manages file outputs efficiently, allowing users to save analysis results directly to files
+- **File Handling Capabilities:** Manages file outputs efficiently, allowing users to save analysis results directly to files.
+
+- **Generate MT VIP Hook:** SigTool can also generate an MT VIP hook to bypass APK signatures. **[How to Inject the hook?...](https://github.com/muhammadrizwan87/sigtool/tree/main/sigtool/sighooks/mt_enhanced_hook#to-inject-hook-on-target-apk)**
 
 ---
 
-### **1. Installation via pip (Recommended):**
+## Requirements
+
+Before using SigTool, ensure that the following system dependencies are installed:
+
+1. **Python**: Required to run the SigTool.
+2. **Java**: Required to run smali.jar for generating MT hook.
+3. **aapt**: Required to extract APK metadata.
+4. **OpenSSL**: Required for handling certificates.
+
+---
+
+---
+
+## Installation
+
+### Termux (Android)
+
+To install SigTool on Termux, use the following command to install all necessary dependencies:
+
+    ```bash
+    pkg install python openjdk-17 aapt openssl-tool
+    ```
+
+### Installation via pip (Recommended)
 
 You can easily install SigTool using pip:
 
-```bash
-pip install sigtool
-```
+    ```bash
+    pip install --force-reinstall sigtool
+    ```
 
-This command will automatically handle the installation of SigTool.
+For the latest changes and features, install SigTool directly from the GitHub repository:
 
-### **2. Custom Build Installation:**
+    ```bash
+    pip install --force-reinstall -U git+https://github.com/muhammadrizwan87/sigtool.git
+    ```
 
-If you prefer to build SigTool from the source:
+### Custom Build Installation
 
-1. **Clone the Repository:**
+To build SigTool from source:
 
-   ```bash
-   git clone https://github.com/muhammadrizwan87/sigtool.git
-   ```
+1. Clone the repository:
 
-2. **Navigate to the SigTool Directory:**
+    ```bash
+    git clone https://github.com/muhammadrizwan87/sigtool.git
+    ```
 
-   ```bash
-   cd sigtool
-   ```
+2. Navigate to the SigTool directory:
 
-3. **Install setuptools:**
+    ```bash
+    cd sigtool
+    ```
 
-   ```bash
-   pip install setuptools
-   ```
+3. Install the build tools:
 
-4. **Build and Install the Package:**
+    ```bash
+    pip install build
+    ```
 
-   ```bash
-   python setup.py install
-   ```
+4. Build and install the package:
+
+    ```bash
+    python -m build
+    pip install --force-reinstall dist/sigtool-2.0-py3-none-any.whl
+    ```
 
 ---
 
-### Requirements
-
-SigTool relies on external tools like `aapt` and `openssl`. You need to ensure these are installed on your system.
-
-- `aapt` (Android Asset Packaging Tool)
-  - To install aapt
-    ```bash
-    apt-get install aapt
-    ```
-- `openssl`
-  - To install openssl
-    ```bash
-    apt-get install openssl
-    ```
-    - Or
-      ```bash
-      pkg install openssl-tool
-      ```
-
----
 
 ### **Usage:**
 
 ```
-usage: sigtool <apk_path> [-a] [-c] [-e] [-f] [-p] [-u] [-o <output_path>]
+usage: sigtool <apk_path> [-a] [-c] [-e] [-f] [-fc] [-fu] [-fuc] [-p] [-u] [-uc] [-hmt] [-o <output_path>]
 
 positional arguments:
   apk_path       Path to the APK file
@@ -101,35 +113,49 @@ options:
   -h, --help     show this help message and exit
   -u             Convert output to uppercase
   -c             Add colons to certificate hashes
+  -uc            Add colons to hashes and convert output to uppercase
   -e             Encode output in Base64
   -p             Parse PEM Certificate
   -a             Generate Smali Byte Array
   -f             Print All Information
-  -o O           Output results to a specified file path
+  -fc            Add colons to hashes and print all information
+  -fu            Convert output to uppercase and print all information
+  -fuc           Add colons to hashes, convert output to uppercase and print all information
+  -hmt           Generate and export hook of MT enhanced version
+  -o O           Output results to a specified file path. If the path ends with '.json', results will be saved in JSON format.
   -v, --version  Show program's version number and exit
 ```
 
 **Examples:**
 
 1. **To print the default results:**
-   ```
-   sigtool /path/to/apk
-   ```
+    ```badh
+    sigtool /path/to/apk
+    ```
 
 2. **To save the default results to a file:**
-   ```
-   sigtool /path/to/apk -o /path/to/output.txt
-   ```
+    ```bash
+    sigtool /path/to/apk -o /path/to/output.txt
+    ```
 
 3. **To print the Base64-encoded results:**
-   ```
-   sigtool /path/to/apk -e
-   ```
+    ```bash
+    sigtool /path/to/apk -e
+    ```
 
 4. **To save all results to a file:**
-   ```
-   sigtool /path/to/apk -f -o /path/to/output.bin
-   ```
+    ```bash
+    sigtool /path/to/apk -f -o /path/to/output.bin
+    ```
+5. **To save results in JSON format:**
+    ```bash
+    sigtool /path/to/apk -f -o /path/to/output.json
+    ```
+
+6. **To export hook of MT enhanced version:**
+    ```bash
+    sigtool /path/to/apk -hmt -o /path/to/hook
+    ```
 
 ---
 
