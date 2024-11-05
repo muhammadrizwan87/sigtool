@@ -16,13 +16,19 @@ class APKSignatureExtractor:
         return file.read(length)
 
     def _find_eocd(self, file):
-        file.seek(-65536, 2)
-        data = file.read(65536)
-        eocd_offset = data.rfind(b'PK\x05\x06')
-        if eocd_offset == -1:
-            raise ValueError("Invalid APK: End of Central Directory signature not found")
-        eocd = data[eocd_offset:eocd_offset + 22]
-        return struct.unpack('<I', eocd[16:20])[0]
+        try:
+            file_size = file.seek(0, 2)
+            seek_offset = -min(65536, file_size)
+            file.seek(seek_offset, 2)
+            data = file.read(65536)
+            eocd_offset = data.rfind(b'PK\x05\x06')
+            if eocd_offset == -1:
+                raise ValueError("Invalid APK: End of Central Directory signature not found")
+            eocd = data[eocd_offset:eocd_offset + 22]
+            return struct.unpack('<I', eocd[16:20])[0]
+        except Exception as e:
+            print(f"Error in _find_eocd: {repr(e)}")
+            raise e
 
     def _find_apk_signing_block(self, file, cd_offset):
         file.seek(cd_offset - 24)
