@@ -43,31 +43,29 @@ Before using SigTool, ensure that the following system dependencies are installe
 
 ---
 
----
-
 ## Installation
 
 ### Termux (Android)
 
 To install SigTool on Termux, use the following command to install all necessary dependencies:
 
-    ```bash
-    pkg install python openjdk-17 aapt openssl-tool
-    ```
+  ```bash
+  pkg install python openjdk-17 aapt openssl-tool
+  ```
 
 ### Installation via pip (Recommended)
 
 You can easily install SigTool using pip:
 
-    ```bash
-    pip install --force-reinstall sigtool
-    ```
+  ```bash
+  pip install --force-reinstall sigtool
+  ```
 
 For the latest changes and features, install SigTool directly from the GitHub repository:
 
-    ```bash
-    pip install --force-reinstall -U git+https://github.com/muhammadrizwan87/sigtool.git
-    ```
+  ```bash
+  pip install --force-reinstall -U git+https://github.com/muhammadrizwan87/sigtool.git
+  ```
 
 ### Custom Build Installation
 
