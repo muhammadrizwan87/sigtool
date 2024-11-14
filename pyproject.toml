@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sigtool"
-version = "2.0"
+version = "3.0"
 description = "A command-line tool for in-depth APK signature and keystore analysis."
 readme = "README.md"
 authors = [

@@ -1,4 +1,5 @@
 import argparse
+import pkg_resources
 import sys
 import os
 import re
@@ -269,6 +270,12 @@ class SigTool:
             print(self.formatter.format_error(f"Error: {e}"))
             sys.exit(1)
     
+def get_version():
+    try:
+        return pkg_resources.get_distribution("sigtool").version
+    except pkg_resources.DistributionNotFound:
+        return "Unknown version"
+
 
 def main():
     usage_msg = "sigtool <apk_path> [-a] [-c] [-e] [-f] [-fc] [-fu] [-fuc] [-p] [-u] [-uc] [-hmt] [-o <output_path>]"
@@ -293,7 +300,7 @@ Examples:
   sigtool /path/to/apk -hmt -o /path/to/hook
 """
 
-    version = "v1.0"
+    version = get_version()
     parser = argparse.ArgumentParser(
         description=(
             "SigTool is a powerful tool designed by MuhammadRizwan from India, "

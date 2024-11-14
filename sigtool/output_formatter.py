@@ -22,12 +22,12 @@ class OutputFormatter:
 |  ___) | | (_| || | (_) | (_) | ||
 | |____/|_|\\__, ||_|\\___/ \\___/|_||
 |          |___/                  |
-|                           v2.0  |
+|                           v3.0  |
 +---by MuhammadRizwan-------------+
         
         """
         self.logo_two = """+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- SigTool v2.0 by MuhammadRizwan    
+ SigTool v3.0 by MuhammadRizwan    
                                          
         https://TDOhex.t.me            
      https://Android_Patches.t.me      
@@ -37,7 +37,7 @@ https://github.com/MuhammadRizwan87
 
         self.meta_data = {
             "Name": "SigTool",
-            "Version": "v2.0",
+            "Version": "v3.0",
             "Author": "MuhammadRizwan",
             "GitHub Repository": "https://github.com/muhammadrizwan87/sigtool",
             "Telegram Channel": "https://TDOhex.t.me",
