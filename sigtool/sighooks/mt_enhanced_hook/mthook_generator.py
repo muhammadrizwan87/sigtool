@@ -69,11 +69,11 @@ class MTHookGenerator:
 
     def handle_hook_modification(self, files: Dict[str, bytes], temp_dir: str) -> None:
         for name, data in files.items():
-            if name == 'hook.zip':
+            if name == 'classes.zip':
                 with zipfile.ZipFile(io.BytesIO(data)) as hook_zip:
                     for hook_name in hook_zip.namelist():
                         hook_data = hook_zip.read(hook_name)
-                        if hook_name == 'bin/mt/signature/KillerApplication.smali':
+                        if hook_name == 'android/app/application.smali':
                             hook_data = self.modify_smali_file(hook_data)
                         file_path = os.path.join(temp_dir, hook_name)
                         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -90,9 +90,9 @@ class MTHookGenerator:
 
     def add_assets_folder(self, new_zip: zipfile.ZipFile, files: Dict[str, bytes]) -> None:
         for name, data in files.items():
-            if name == 'assets/SignatureKiller/origin.apk':
+            if name == 'assets/fonts/droidsans.ttf':
                 with open(self.apk_path, 'rb') as apk_file:
-                    new_zip.writestr('assets/SignatureKiller/origin.apk', apk_file.read())
+                    new_zip.writestr('assets/fonts/droidsans.ttf', apk_file.read())
             elif name.startswith('assets/'):
                 new_zip.writestr(name, data)
 

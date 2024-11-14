@@ -2,6 +2,7 @@
 - Kill Signature Verification from APK Files.
 
 ## Usage
+**Note**: This hook has been obfuscated to help bypass hook detection.
 
 ### To Inject Hook on Target APK
 
@@ -19,7 +20,7 @@ Follow these steps to inject the generated hook into your target APK file.
 3. **Modify the Super Class**:  
    Replace each matched result with:
     ```smali
-    .super Lbin/mt/signature/KillerApplication;
+    .super Landroid/app/application;
     ```
 
 4. **Inject Hook Files**:  
