@@ -40,6 +40,7 @@ Before using SigTool, ensure that the following system dependencies are installe
 2. **Java**: Required to run smali.jar for generating MT hook.
 3. **aapt**: Required to extract APK metadata.
 4. **OpenSSL**: Required for handling certificates.
+5. **Setuptools**: Required for retrieve version code.
 
 ---
 
@@ -51,6 +52,7 @@ To install SigTool on Termux, use the following command to install all necessary
 
   ```bash
   pkg install python openjdk-17 aapt openssl-tool
+  pip install setuptools
   ```
 
 ### Installation via pip (Recommended)
