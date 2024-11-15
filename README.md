@@ -95,7 +95,7 @@ To build SigTool from source:
 
     ```bash
     python -m build
-    pip install --force-reinstall dist/sigtool-2.0-py3-none-any.whl
+    pip install --force-reinstall dist/sigtool-3.0-py3-none-any.whl
     ```
 
 ---
